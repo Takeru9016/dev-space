@@ -1,55 +1,83 @@
+import { Component } from "react";
 import { Box, Flex, Text, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, Routes, Route } from "react-router-dom";
 
+import Events from "./Events";
+import Select from "./Select";
 import { images } from "../assets";
 
-export default function App() {
-  return (
-    <>
-      <Navbar />
-      <HeroSection />
-      {/* Other components */}
-    </>
-  );
+class Landing extends Component {
+  render() {
+    let loginbtn = (
+      <Button colorScheme="teal" onClick={this.props.onLogin}>
+        <Link to="/signin">Login</Link>
+      </Button>
+    );
+
+    if (this.props.profileData !== undefined) {
+      const data = this.props.profileData;
+      if (Object.keys(data).length > 0) {
+        const first_name = data.name.split(" ")[0];
+        loginbtn = <div id="profile-box">{first_name}</div>;
+      }
+    }
+
+    return (
+      <>
+        <Navbar
+          onLogin={this.props.onLogin}
+          profileData={this.props.profileData}
+          loginbtn={loginbtn}
+        />
+        <HeroSection
+          navToForum={this.props.navToForum}
+          profileData={this.props.profileData}
+        />
+        <Events />
+      </>
+    );
+  }
 }
 
-function Navbar() {
-  return (
-    <Flex
-      as="nav"
-      align="center"
-      justify="space-between"
-      py={8}
-      px={20}
-      bgGradient="linear(to-r, blue.500, white)"
-    >
-      <Box>
-        <Text
-          className="flex justify-center gap-5"
-          fontSize="lg"
-          color="black"
-          fontWeight="bold"
-        >
-          <img src={images.logo} alt="logo" />
-          <Link to="/">Dev Space</Link>
-        </Text>
-      </Box>
-      <Flex align="center">
-        <Button variant="ghost" mr={2}>
-          <Link to="/forum">Forum</Link>
-        </Button>
-        <Button variant="ghost" mr={2}>
-          <Link to="/inbox">Inbox</Link>
-        </Button>
-        <Button colorScheme="teal">
-          <Link to="/signin">Sign In</Link>
-        </Button>
+class Navbar extends Component {
+  render() {
+    const { loginbtn } = this.props;
+
+    return (
+      <Flex
+        as="nav"
+        align="center"
+        justify="space-between"
+        py={8}
+        px={20}
+        bgGradient="linear(to-r, blue.500, white)"
+      >
+        <Box>
+          <Text
+            className="flex justify-center gap-5"
+            fontSize="lg"
+            color="black"
+            fontWeight="bold"
+          >
+            <img src={images.logo} alt="logo" />
+            <Link to="/">Dev Space</Link>
+          </Text>
+        </Box>
+        <Flex align="center">
+          <Button variant="ghost" mr={2}>
+            <Link to="/forum">Forum</Link>
+          </Button>
+          <Button variant="ghost" mr={2}>
+            <Link to="/inbox">Inbox</Link>
+          </Button>
+          {loginbtn}
+        </Flex>
       </Flex>
-    </Flex>
-  );
+    );
+  }
 }
 
-function HeroSection() {
+function HeroSection(props) {
   return (
     <Flex
       bgGradient="linear(to-r, blue.500, white)"
@@ -77,6 +105,19 @@ function HeroSection() {
       <Box flex="1">
         <img src={images.team} alt="team" />
       </Box>
+      <Routes>
+        <Route
+          path=""
+          element={
+            <Select
+              navToForum={props.navToForum}
+              profileData={props.profileData}
+            />
+          }
+        />
+      </Routes>
     </Flex>
   );
 }
+
+export default Landing;

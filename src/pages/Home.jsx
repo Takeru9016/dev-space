@@ -1,6 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "../components/Layout";
+import { Routes, Route } from "react-router-dom";
 import Landing from "../components/Landing";
 import Login from "../components/Login";
 import NavigateToPage from "../components/NavigateToPage";
@@ -52,26 +51,22 @@ class Home extends React.Component {
     );
 
     return (
-      <Router>
-        <Layout title="Home / teamfinder">
-          <Routes>
-            {this.state.login === 0 || this.state.login === 2 ? (
-              <Route
-                path="/"
-                element={
-                  <Landing
-                    navToForum={this.navToForum}
-                    profileData={this.state.profileData}
-                    onLogin={this.handleLogin}
-                  />
-                }
+      <Routes>
+        {this.state.login === 0 || this.state.login === 2 ? (
+          <Route
+            path="/"
+            element={
+              <Landing
+                navToForum={this.navToForum}
+                profileData={this.state.profileData}
+                onLogin={this.handleLogin}
               />
-            ) : (
-              <Route path="/" element={<LandingAndLogin />} />
-            )}
-          </Routes>
-        </Layout>
-      </Router>
+            }
+          />
+        ) : (
+          <Route path="/" element={<LandingAndLogin />} />
+        )}
+      </Routes>
     );
   }
 }
